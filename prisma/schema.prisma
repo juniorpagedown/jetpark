@@ -1,0 +1,259 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("ATENDENTE")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  pedidos  Pedido[]
+  comandas Comanda[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String?
+  telefone  String?
+  documento String?
+  endereco  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comandas  Comanda[]
+  estadias  Estadia[]
+  reservas  Reserva[]
+  visitante Visitante[]
+
+  @@map("clients")
+}
+
+model Mesa {
+  id       String     @id @default(cuid())
+  numero   Int        @unique
+  lugares  Int
+  status   String     @default("LIVRE")
+  qrCode   String?    @unique
+
+  comandas Comanda[]
+
+  @@map("mesas")
+}
+
+model Produto {
+  id        String   @id @default(cuid())
+  nome      String
+  descricao String?
+  preco     Float
+  categoria String
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  itensPedido ItemPedido[]
+
+  @@map("produtos")
+}
+
+model Pedido {
+  id        String       @id @default(cuid())
+  comandaId String
+  userId    String
+  status    String       @default("PENDENTE")
+  total     Float
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  comanda Comanda      @relation(fields: [comandaId], references: [id])
+  user    User         @relation(fields: [userId], references: [id])
+  itens   ItemPedido[]
+
+  @@map("pedidos")
+}
+
+model ItemPedido {
+  id         String  @id @default(cuid())
+  pedidoId   String
+  produtoId  String
+  quantidade Int
+  preco      Float
+  observacao String?
+
+  pedido  Pedido  @relation(fields: [pedidoId], references: [id])
+  produto Produto @relation(fields: [produtoId], references: [id])
+
+  @@map("itens_pedido")
+}
+
+model Comanda {
+  id        String        @id @default(cuid())
+  mesaId    String
+  clientId  String?
+  userId    String
+  status    String        @default("ABERTA")
+  total     Float         @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  mesa       Mesa         @relation(fields: [mesaId], references: [id])
+  client     Client?      @relation(fields: [clientId], references: [id])
+  user       User         @relation(fields: [userId], references: [id])
+  pedidos    Pedido[]
+  pagamentos Pagamento[]
+
+  @@map("comandas")
+}
+
+model Pagamento {
+  id        String      @id @default(cuid())
+  comandaId String
+  valor     Float
+  metodo    String
+  createdAt DateTime    @default(now())
+
+  comanda Comanda @relation(fields: [comandaId], references: [id])
+
+  @@map("pagamentos")
+}
+
+model Visitante {
+  id        String   @id @default(cuid())
+  clientId  String
+  entrada   DateTime @default(now())
+  saida     DateTime?
+  pagou     Boolean  @default(false)
+  valor     Float?
+
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@map("visitantes")
+}
+
+model Quarto {
+  id          String       @id @default(cuid())
+  numero      String       @unique
+  tipo        String
+  preco       Float
+  status      String       @default("LIVRE")
+  descricao   String?
+  capacidade  Int
+  comodidades String
+
+  estadias Estadia[]
+  reservas Reserva[]
+
+  @@map("quartos")
+}
+
+model Reserva {
+  id       String   @id @default(cuid())
+  quartoId String
+  clientId String
+  checkIn  DateTime
+  checkOut DateTime
+  valor    Float
+  status   String        @default("CONFIRMADA")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quarto Quarto @relation(fields: [quartoId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@map("reservas")
+}
+
+model Hospede {
+  id        String   @id @default(cuid())
+  nome      String
+  documento String   @unique
+  telefone  String?
+  email     String?
+  endereco  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  estadias Estadia[]
+
+  @@map("hospedes")
+}
+
+model Estadia {
+  id        String        @id @default(cuid())
+  quartoId  String
+  clientId  String
+  hospedeId String
+  checkIn   DateTime
+  checkOut  DateTime?
+  valor     Float
+  status    String        @default("ATIVA")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  quarto  Quarto  @relation(fields: [quartoId], references: [id])
+  client  Client  @relation(fields: [clientId], references: [id])
+  hospede Hospede @relation(fields: [hospedeId], references: [id])
+
+  @@map("estadias")
+}
+
+model Notificacao {
+  id        String   @id @default(cuid())
+  titulo    String
+  mensagem  String
+  tipo      String
+  lida      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notificacoes")
+}
+

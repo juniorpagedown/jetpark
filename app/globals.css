@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 17 24 39;
+    --card: 255 255 255;
+    --card-foreground: 17 24 39;
+    --popover: 255 255 255;
+    --popover-foreground: 17 24 39;
+    --primary: 139 92 246;
+    --primary-foreground: 255 255 255;
+    --secondary: 249 250 251;
+    --secondary-foreground: 17 24 39;
+    --muted: 243 244 246;
+    --muted-foreground: 75 85 99;
+    --accent: 243 244 246;
+    --accent-foreground: 17 24 39;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 229 231 235;
+    --input: 229 231 235;
+    --ring: 139 92 246;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 15 23 42;
+    --foreground: 248 250 252;
+    --card: 30 41 59;
+    --card-foreground: 248 250 252;
+    --popover: 30 41 59;
+    --popover-foreground: 248 250 252;
+    --primary: 139 92 246;
+    --primary-foreground: 255 255 255;
+    --secondary: 51 65 85;
+    --secondary-foreground: 248 250 252;
+    --muted: 51 65 85;
+    --muted-foreground: 148 163 184;
+    --accent: 51 65 85;
+    --accent-foreground: 248 250 252;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 139 92 246;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Fallback para botões caso as variáveis CSS não funcionem */
+.btn-primary {
+  background-color: #8B5CF6;
+  color: white;
+  border: 1px solid #8B5CF6;
+}
+
+.btn-primary:hover {
+  background-color: #7C3AED;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #111827;
+  border: 1px solid #D1D5DB;
+}
+
+.btn-outline:hover {
+  background-color: #F3F4F6;
+}
+
+/* Classes utilitárias para melhor contraste */
+.text-primary {
+  color: #111827;
+}
+
+.text-secondary {
+  color: #374151;
+}
+
+.text-muted {
+  color: #4B5563;
+}
+
+.text-disabled {
+  color: #9CA3AF;
+}
+
+/* Garantir contraste em elementos interativos */
+.btn-outline {
+  border: 1px solid #D1D5DB;
+  background-color: transparent;
+  color: #111827;
+}
+
+.btn-outline:hover {
+  background-color: #F9FAFB;
+  border-color: #9CA3AF;
+}
