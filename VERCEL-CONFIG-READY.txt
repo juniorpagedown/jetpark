@@ -1,0 +1,48 @@
+🔧 CONFIGURAÇÃO VERCEL - JETPARK
+===============================
+
+📋 COPIE E COLE AS VARIÁVEIS ABAIXO NO DASHBOARD DO VERCEL:
+
+1. Acesse: https://vercel.com/dashboard
+2. Clique no projeto: jetpark
+3. Settings → Environment Variables
+4. Adicione estas 3 variáveis:
+
+---
+
+🗄️ VARIÁVEL 1: DATABASE_URL
+Name: DATABASE_URL
+Value: postgres://neondb_owner:npg_wsMBvL3bcj8u@ep-rapid-bird-adibyqye-pooler.c-2.us-east-1.aws.neon.tech/neondb?connect_timeout=15&sslmode=require
+Environment: ✅ Production ✅ Preview ✅ Development
+
+---
+
+🔐 VARIÁVEL 2: NEXTAUTH_SECRET  
+Name: NEXTAUTH_SECRET
+Value: jetpark-production-secret-key-super-segura-2024-neon-postgres
+Environment: ✅ Production ✅ Preview ✅ Development
+
+---
+
+🌐 VARIÁVEL 3: NEXTAUTH_URL
+Name: NEXTAUTH_URL
+Value: https://jetpark-6iuv7joa3-juniorpagedowns-projects.vercel.app
+Environment: ✅ Production ✅ Preview ✅ Development
+
+---
+
+✅ APÓS CONFIGURAR:
+1. Execute o SQL no Neon Console (arquivo neon-setup-complete.sql)
+2. Faça o deploy: vercel --prod
+3. Teste em: https://seu-projeto.vercel.app/api/env-check
+4. Login: admin / admin123
+
+🎯 STATUS:
+- DATABASE_URL: ✅ Valor do Neon configurado (com pooling + timeout)
+- NEXTAUTH_SECRET: ✅ Chave segura gerada
+- NEXTAUTH_URL: ✅ URL correta do projeto
+
+⚡ IMPORTANTE:
+- Marcar todos os ambientes (Production, Preview, Development)
+- Usar a URL com pooling para melhor performance
+- Executar SQL setup após configurar as variáveis
