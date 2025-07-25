@@ -16,27 +16,44 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          console.log('❌ Credenciais ausentes')
           return null
         }
+
+        console.log('🔍 Tentando autenticar:', credentials.email)
 
         // Buscar o usuário no banco de dados
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            password: true
           }
         })
 
+        console.log('👤 Usuário encontrado:', user ? 'Sim' : 'Não')
+
         if (!user || !user.password) {
+          console.log('❌ Usuário não encontrado ou sem senha')
           return null
         }
 
         // Verificar se a senha está correta
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+        
+        console.log('🔑 Senha válida:', isPasswordValid ? 'Sim' : 'Não')
 
         if (!isPasswordValid) {
+          console.log('❌ Senha incorreta')
           return null
         }
 
+        console.log('✅ Autenticação bem-sucedida')
         return {
           id: user.id,
           email: user.email,
