@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import bcrypt from "bcryptjs"
-import { ensureDefaultUsers } from "@/lib/ensure-users"
+import { initializeDatabase } from "@/lib/init-db"
 
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -24,8 +24,8 @@ const handler = NextAuth({
         console.log('🔍 Tentando autenticar:', credentials.username)
 
         try {
-          // Garantir que os usuários padrão existam
-          await ensureDefaultUsers()
+          // Garantir que o banco de dados está inicializado
+          await initializeDatabase()
 
           // Primeiro, tentar buscar por username
           let user = null

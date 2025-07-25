@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { initializeDatabase } from '@/lib/init-db'
 
 export async function GET() {
   try {
     console.log('🔍 DEBUG: Iniciando verificação do banco de dados...')
+    
+    // Forçar inicialização do banco
+    await initializeDatabase()
     
     // Informações sobre o ambiente
     const debugInfo: any = {
