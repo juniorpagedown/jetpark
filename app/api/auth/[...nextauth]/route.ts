@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import bcrypt from "bcryptjs"
-import { initializeDatabase } from "@/lib/init-db"
+import { initializeDatabase } from "@/lib/init-db-postgres"
 
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),

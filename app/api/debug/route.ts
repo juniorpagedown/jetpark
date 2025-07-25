@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
-import { initializeDatabase } from '@/lib/init-db'
+import { initializeDatabase } from '@/lib/init-db-postgres'
 
 export async function GET() {
   try {
