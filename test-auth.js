@@ -1,44 +1,57 @@
-import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcryptjs'
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function testAuth() {
-  console.log('🔍 Testando autenticação...')
-  
-  // Buscar o usuário admin
-  const user = await prisma.user.findUnique({
-    where: { email: 'admin@sistema.com' }
-  })
-  
-  if (!user) {
-    console.log('❌ Usuário não encontrado!')
-    return
-  }
-  
-  console.log('✅ Usuário encontrado:', {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    hasPassword: !!user.password
-  })
-  
-  if (user.password) {
-    // Testar a senha
-    const isValid = await bcrypt.compare('admin123', user.password)
-    console.log('🔑 Teste de senha:', isValid ? '✅ Válida' : '❌ Inválida')
+  try {
+    console.log('🔍 Verificando usuários no banco...');
     
-    // Mostrar hash da senha (primeiros caracteres)
-    console.log('🔐 Hash da senha:', user.password.substring(0, 20) + '...')
-  } else {
-    console.log('❌ Usuário não tem senha definida')
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        name: true,
+        role: true,
+        password: true
+      }
+    });
+    
+    console.log(`👥 Encontrados ${users.length} usuários:`);
+    users.forEach(user => {
+      console.log(`- ID: ${user.id}`);
+      console.log(`  Username: ${user.username}`);
+      console.log(`  Email: ${user.email}`);
+      console.log(`  Name: ${user.name}`);
+      console.log(`  Role: ${user.role}`);
+      console.log(`  Has Password: ${user.password ? 'Yes' : 'No'}`);
+      console.log('---');
+    });
+    
+    // Testar autenticação com admin
+    console.log('🔐 Testando autenticação com admin/123456...');
+    const adminUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { username: 'admin' },
+          { email: 'admin' }
+        ]
+      }
+    });
+    
+    if (adminUser && adminUser.password) {
+      const isPasswordValid = await bcrypt.compare('123456', adminUser.password);
+      console.log(`✅ Senha válida para admin: ${isPasswordValid}`);
+    } else {
+      console.log('❌ Usuário admin não encontrado ou sem senha');
+    }
+    
+  } catch (error) {
+    console.error('❌ Erro:', error);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
-testAuth()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error('Erro:', error)
-    process.exit(1)
-  })
+testAuth();

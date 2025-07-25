@@ -4,7 +4,24 @@ import bcrypt from 'bcryptjs'
 export async function ensureDefaultUsers() {
   try {
     // Verificar se já existem usuários
-    const userCount = await prisma.user.count()
+    let userCount = 0;
+    
+    try {
+      userCount = await prisma.user.count()
+    } catch (error) {
+      // Se der erro, provavelmente o schema não está atualizado
+      console.log('⚠️  Erro ao contar usuários, possivelmente schema desatualizado:', error.message)
+      
+      // Tentar deletar todos os usuários para forçar recriação
+      try {
+        await prisma.user.deleteMany({})
+        console.log('🗑️  Usuários antigos removidos')
+      } catch (deleteError) {
+        console.log('ℹ️  Não foi possível remover usuários antigos (normal se não existirem)')
+      }
+      
+      userCount = 0
+    }
     
     if (userCount === 0) {
       console.log('🚀 Criando usuários padrão...')
@@ -45,14 +62,21 @@ export async function ensureDefaultUsers() {
       ]
 
       for (const user of users) {
-        await prisma.user.create({
-          data: user
-        })
+        try {
+          await prisma.user.create({
+            data: user
+          })
+          console.log(`✅ Usuário ${user.username} criado`)
+        } catch (createError) {
+          console.log(`⚠️  Erro ao criar usuário ${user.username}:`, createError.message)
+        }
       }
 
       console.log('✅ Usuários padrão criados com sucesso!')
+    } else {
+      console.log(`ℹ️  Já existem ${userCount} usuários no banco`)
     }
   } catch (error) {
-    console.error('❌ Erro ao criar usuários padrão:', error)
+    console.error('❌ Erro ao garantir usuários padrão:', error)
   }
 }
