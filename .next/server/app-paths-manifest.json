@@ -1,12 +1,1 @@
-{
-  "/page": "app/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/mesas/page": "app/mesas/page.js",
-  "/cozinha/page": "app/cozinha/page.js",
-  "/comandas/page": "app/comandas/page.js",
-  "/entradas/page": "app/entradas/page.js",
-  "/hospedagem/page": "app/hospedagem/page.js",
-  "/reservas/page": "app/reservas/page.js",
-  "/hospedes/page": "app/hospedes/page.js"
-}
+{}
