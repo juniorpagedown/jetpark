@@ -23,50 +23,99 @@ const handler = NextAuth({
 
         console.log('🔍 Tentando autenticar:', credentials.username)
 
-        // Garantir que os usuários padrão existam
-        await ensureDefaultUsers()
+        try {
+          // Garantir que os usuários padrão existam
+          await ensureDefaultUsers()
 
-        // Buscar o usuário no banco de dados por username ou email
-        const user = await prisma.user.findFirst({
-          where: {
-            OR: [
-              { username: credentials.username },
-              { email: credentials.username }
-            ]
-          },
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            name: true,
-            role: true,
-            password: true
+          // Primeiro, tentar buscar por username
+          let user = null
+          
+          try {
+            user = await prisma.user.findFirst({
+              where: {
+                username: credentials.username
+              },
+              select: {
+                id: true,
+                email: true,
+                username: true,
+                name: true,
+                role: true,
+                password: true
+              }
+            })
+            console.log('🔍 Busca por username:', user ? 'Encontrado' : 'Não encontrado')
+          } catch (usernameError) {
+            console.log('⚠️  Erro ao buscar por username (campo pode não existir):', usernameError.message)
+            
+            // Se falhar, tentar buscar apenas por email
+            try {
+              user = await prisma.user.findFirst({
+                where: {
+                  email: credentials.username
+                },
+                select: {
+                  id: true,
+                  email: true,
+                  name: true,
+                  role: true,
+                  password: true
+                }
+              })
+              console.log('🔍 Busca por email como fallback:', user ? 'Encontrado' : 'Não encontrado')
+            } catch (emailError) {
+              console.log('❌ Erro ao buscar por email:', emailError.message)
+            }
           }
-        })
 
-        console.log('👤 Usuário encontrado:', user ? 'Sim' : 'Não')
+          // Se não encontrou, tentar buscar por email se o input parecer um email
+          if (!user && credentials.username.includes('@')) {
+            try {
+              user = await prisma.user.findFirst({
+                where: {
+                  email: credentials.username
+                },
+                select: {
+                  id: true,
+                  email: true,
+                  name: true,
+                  role: true,
+                  password: true
+                }
+              })
+              console.log('🔍 Busca adicional por email:', user ? 'Encontrado' : 'Não encontrado')
+            } catch (error) {
+              console.log('❌ Erro na busca adicional por email:', error.message)
+            }
+          }
 
-        if (!user || !user.password) {
-          console.log('❌ Usuário não encontrado ou sem senha')
+          console.log('👤 Usuário final encontrado:', user ? 'Sim' : 'Não')
+
+          if (!user || !user.password) {
+            console.log('❌ Usuário não encontrado ou sem senha')
+            return null
+          }
+
+          // Verificar se a senha está correta
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+          
+          console.log('🔑 Senha válida:', isPasswordValid ? 'Sim' : 'Não')
+
+          if (!isPasswordValid) {
+            console.log('❌ Senha incorreta')
+            return null
+          }
+
+          console.log('✅ Autenticação bem-sucedida')
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          }
+        } catch (error) {
+          console.error('❌ Erro geral na autenticação:', error)
           return null
-        }
-
-        // Verificar se a senha está correta
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
-        
-        console.log('🔑 Senha válida:', isPasswordValid ? 'Sim' : 'Não')
-
-        if (!isPasswordValid) {
-          console.log('❌ Senha incorreta')
-          return null
-        }
-
-        console.log('✅ Autenticação bem-sucedida')
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
         }
       }
     }),
