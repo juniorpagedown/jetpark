@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
+import bcrypt from "bcryptjs"
 
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -18,15 +19,21 @@ const handler = NextAuth({
           return null
         }
 
-        // Aqui você implementaria a verificação de senha
-        // Por simplicidade, vamos apenas verificar se o usuário existe
+        // Buscar o usuário no banco de dados
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email
           }
         })
 
-        if (!user) {
+        if (!user || !user.password) {
+          return null
+        }
+
+        // Verificar se a senha está correta
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+
+        if (!isPasswordValid) {
           return null
         }
 
