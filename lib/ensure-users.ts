@@ -9,30 +9,34 @@ export async function ensureDefaultUsers() {
     if (userCount === 0) {
       console.log('🚀 Criando usuários padrão...')
       
-      // Hash para a senha padrão "admin123"
-      const hashedPassword = await bcrypt.hash('admin123', 12)
+      // Hash para a senha padrão "123456"
+      const hashedPassword = await bcrypt.hash('123456', 12)
 
       // Criar usuários padrão
       const users = [
         {
+          username: 'admin',
           email: 'admin@sistema.com',
           name: 'Administrador',
           password: hashedPassword,
           role: 'ADMIN',
         },
         {
+          username: 'gerente',
           email: 'gerente@sistema.com',
           name: 'Gerente',
           password: hashedPassword,
           role: 'GERENTE',
         },
         {
+          username: 'atendente',
           email: 'atendente@sistema.com',
           name: 'Atendente',
           password: hashedPassword,
           role: 'ATENDENTE',
         },
         {
+          username: 'cozinha',
           email: 'cozinha@sistema.com',
           name: 'Cozinha',
           password: hashedPassword,

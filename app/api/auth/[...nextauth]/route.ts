@@ -12,28 +12,32 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        if (!credentials?.username || !credentials?.password) {
           console.log('❌ Credenciais ausentes')
           return null
         }
 
-        console.log('🔍 Tentando autenticar:', credentials.email)
+        console.log('🔍 Tentando autenticar:', credentials.username)
 
         // Garantir que os usuários padrão existam
         await ensureDefaultUsers()
 
-        // Buscar o usuário no banco de dados
-        const user = await prisma.user.findUnique({
+        // Buscar o usuário no banco de dados por username ou email
+        const user = await prisma.user.findFirst({
           where: {
-            email: credentials.email
+            OR: [
+              { username: credentials.username },
+              { email: credentials.username }
+            ]
           },
           select: {
             id: true,
             email: true,
+            username: true,
             name: true,
             role: true,
             password: true
