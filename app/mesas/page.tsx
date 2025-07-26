@@ -102,20 +102,20 @@ export default function MesasPage() {
 
   return (
     <DashboardLayout title="Controle de Mesas">
-      {/* Botões de Ação */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" className="text-sm">
+      <div className="space-y-6">
+        {/* Botões de Ação */}
+        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-4">
+          <Button variant="outline" className="w-full sm:w-auto">
             Adicionar Mesa
           </Button>
-          <Button className="text-sm">
+          <Button className="w-full sm:w-auto">
             Nova Comanda
           </Button>
         </div>
-      </div>
-      {/* Resumo - Responsivo */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
-          <Card>
+
+        {/* Resumo - Responsivo */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total de Mesas</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
@@ -125,7 +125,7 @@ export default function MesasPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Mesas Livres</CardTitle>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -137,7 +137,7 @@ export default function MesasPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Mesas Ocupadas</CardTitle>
               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -243,6 +243,7 @@ export default function MesasPage() {
             </Card>
           ))}
         </div>
+      </div>
     </DashboardLayout>
   )
 }

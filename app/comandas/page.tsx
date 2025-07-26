@@ -145,41 +145,41 @@ export default function ComandasPage() {
           {filteredComandas.map((comanda) => (
             <Card key={comanda.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-4 sm:p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">{comanda.id}</h3>
-                      <p className="text-sm text-muted-foreground">
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-lg truncate">{comanda.id}</h3>
+                      <p className="text-sm text-muted-foreground truncate">
                         Mesa {comanda.mesa} {comanda.cliente && `• ${comanda.cliente}`}
                       </p>
                     </div>
                     <Badge 
                       variant={comanda.status === 'ABERTA' ? 'default' : 'secondary'}
-                      className="w-fit"
+                      className="w-fit shrink-0"
                     >
                       {comanda.status}
                     </Badge>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                    <div className="grid grid-cols-3 sm:flex sm:gap-6 text-center sm:text-right">
-                      <div>
+                  <div className="flex flex-col xl:flex-row gap-4 xl:gap-6">
+                    <div className="grid grid-cols-3 gap-4 text-center xl:flex xl:gap-6 xl:text-right">
+                      <div className="min-w-0">
                         <p className="text-sm text-muted-foreground">Total</p>
-                        <p className="font-semibold text-lg">R$ {comanda.total.toFixed(2)}</p>
+                        <p className="font-semibold text-lg truncate">R$ {comanda.total.toFixed(2)}</p>
                       </div>
                       
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-sm text-muted-foreground">Itens</p>
                         <p className="font-semibold">{comanda.itens}</p>
                       </div>
 
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-sm text-muted-foreground">Aberta às</p>
                         <p className="font-semibold">{comanda.tempoAbertura}</p>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 shrink-0">
                       <Button variant="outline" size="sm" className="w-full sm:w-auto">
                         Ver Detalhes
                       </Button>

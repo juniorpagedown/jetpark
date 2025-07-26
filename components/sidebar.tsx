@@ -71,14 +71,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Overlay para mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-      
       {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 
@@ -92,7 +84,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">JP</span>
             </div>
-            <span className="font-bold text-lg">JetPark</span>
+            <span className="font-bold text-lg text-foreground">JetPark</span>
           </div>
           <Button
             variant="ghost"
