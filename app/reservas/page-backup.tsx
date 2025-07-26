@@ -56,6 +56,28 @@ export default function ReservasPage() {
       status: 'CONFIRMADA',
       noites: 3,
       hospedes: 2
+    },
+    {
+      id: 'RES-004',
+      quarto: '202',
+      cliente: 'João Oliveira',
+      checkIn: '25/01/2025',
+      checkOut: '27/01/2025',
+      valor: 500.00,
+      status: 'FINALIZADA',
+      noites: 2,
+      hospedes: 3
+    },
+    {
+      id: 'RES-005',
+      quarto: '101',
+      cliente: 'Pedro Santos',
+      checkIn: '27/01/2025',
+      checkOut: '29/01/2025',
+      valor: 300.00,
+      status: 'CANCELADA',
+      noites: 2,
+      hospedes: 1
     }
   ])
 
@@ -105,7 +127,6 @@ export default function ReservasPage() {
             Nova Reserva
           </Button>
         </div>
-
         {/* Resumo - Grid Responsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           <Card className="hover:shadow-md transition-shadow">
@@ -140,11 +161,14 @@ export default function ReservasPage() {
 
           <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Taxa Ocupação</CardTitle>
+              <CardTitle className="text-sm font-medium">Taxa de Ocupação</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">85%</div>
+              <div className="text-2xl font-bold">75%</div>
+              <p className="text-xs text-muted-foreground">
+                Próximos 30 dias
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -154,7 +178,7 @@ export default function ReservasPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Buscar por ID, cliente ou quarto..."
+              placeholder="Buscar por reserva, cliente ou quarto..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 w-full"
@@ -170,25 +194,20 @@ export default function ReservasPage() {
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-lg">{reserva.id}</h3>
-                        <Badge 
-                          className={`${getStatusColor(reserva.status)} text-white w-fit`}
-                        >
-                          {getStatusText(reserva.status)}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        <strong>Cliente:</strong> {reserva.cliente}
-                      </p>
+                      <h3 className="font-semibold text-lg">{reserva.id}</h3>
                       <p className="text-sm text-muted-foreground">
-                        <strong>Quarto:</strong> {reserva.quarto} • <strong>Hóspedes:</strong> {reserva.hospedes}
-                      </p>
+                        {reserva.cliente} • Quarto {reserva.quarto}
                     </div>
+                    <Badge 
+                      variant="secondary" 
+                      className={`${getStatusColor(reserva.status)} text-white w-fit`}
+                    >
+                      {getStatusText(reserva.status)}
+                    </Badge>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                    <div className="grid grid-cols-2 sm:flex sm:gap-6 text-center sm:text-right">
+                  <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 lg:flex lg:gap-6 text-center lg:text-right">
                       <div>
                         <p className="text-sm text-muted-foreground">Check-in</p>
                         <p className="font-semibold">{reserva.checkIn}</p>
@@ -200,8 +219,8 @@ export default function ReservasPage() {
                       </div>
 
                       <div>
-                        <p className="text-sm text-muted-foreground">Noites</p>
-                        <p className="font-semibold">{reserva.noites}</p>
+                        <p className="text-sm text-muted-foreground">Hóspedes</p>
+                        <p className="font-semibold">{reserva.hospedes}</p>
                       </div>
 
                       <div>
@@ -214,25 +233,33 @@ export default function ReservasPage() {
                       <Button variant="outline" size="sm" className="w-full sm:w-auto">
                         Ver Detalhes
                       </Button>
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                        Editar
-                      </Button>
                       {reserva.status === 'CONFIRMADA' && (
-                        <Button size="sm" className="w-full sm:w-auto">
-                          Check-in
+                        <>
+                          <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                            Editar
+                          </Button>
+                          <Button size="sm" className="w-full sm:w-auto">
+                            Check-in
+                          </Button>
+                        </>
+                      )}
+                      {reserva.status === 'FINALIZADA' && (
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                          Reimprimir
                         </Button>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {reserva.observacoes && (
-                  <div className="mt-4 pt-4 border-t">
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Observações:</strong> {reserva.observacoes}
-                    </p>
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm text-muted-foreground">
+                    <span>{reserva.noites} noite{reserva.noites > 1 ? 's' : ''}</span>
+                    {reserva.observacoes && (
+                      <span>Obs: {reserva.observacoes}</span>
+                    )}
                   </div>
-                )}
+                </div>
               </CardContent>
             </Card>
           ))}
