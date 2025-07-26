@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { PageHeader } from "@/components/page-header"
 import { Clock, ChefHat, CheckCircle, AlertCircle } from "lucide-react"
 
 interface ItemPedido {
@@ -112,27 +113,21 @@ export default function CozinhaPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center space-x-2">
-              <ChefHat className="h-6 w-6" />
-              <span>Cozinha - KDS</span>
-            </h1>
-            <div className="flex items-center space-x-4">
-              <Badge variant="outline" className="text-red-600">
-                {pedidosPendentes.length} Pendentes
-              </Badge>
-              <Badge variant="outline" className="text-yellow-600">
-                {pedidosPreparando.length} Preparando
-              </Badge>
-              <Badge variant="outline" className="text-green-600">
-                {pedidosProntos.length} Prontos
-              </Badge>
-            </div>
-          </div>
+      <PageHeader title="Cozinha - KDS" />
+
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-center space-x-6 mb-6">
+          <Badge variant="outline" className="text-red-600 text-sm px-4 py-2">
+            {pedidosPendentes.length} Pendentes
+          </Badge>
+          <Badge variant="outline" className="text-yellow-600 text-sm px-4 py-2">
+            {pedidosPreparando.length} Preparando
+          </Badge>
+          <Badge variant="outline" className="text-green-600 text-sm px-4 py-2">
+            {pedidosProntos.length} Prontos
+          </Badge>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

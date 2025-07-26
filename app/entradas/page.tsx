@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { PageHeader } from "@/components/page-header"
 import { Search, UserPlus, Clock, DollarSign, Users } from "lucide-react"
 
 interface Visitante {
@@ -88,17 +89,16 @@ export default function EntradasPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Entrada de Visitantes</h1>
-            <Button>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Registrar Entrada
-            </Button>
-          </div>
+      <PageHeader title="Entrada de Visitantes" />
+
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-end mb-6">
+          <Button>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Registrar Entrada
+          </Button>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8">
         {/* Resumo */}

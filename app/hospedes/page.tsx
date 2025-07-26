@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { PageHeader } from "@/components/page-header"
 import { Search, UserPlus, Calendar, Phone, Mail } from "lucide-react"
 
 interface Hospede {
@@ -92,17 +93,16 @@ export default function HospedesPage() {
 
     return (
         <div className="min-h-screen bg-background">
-            <header className="border-b">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">Cadastro de Hóspedes</h1>
-                        <Button>
-                            <UserPlus className="h-4 w-4 mr-2" />
-                            Novo Hóspede
-                        </Button>
-                    </div>
+            <PageHeader title="Cadastro de Hóspedes" />
+
+            <div className="container mx-auto px-4 py-4">
+                <div className="flex items-center justify-end mb-6">
+                    <Button>
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Novo Hóspede
+                    </Button>
                 </div>
-            </header>
+            </div>
 
             <main className="container mx-auto px-4 py-8">
                 {/* Resumo */}

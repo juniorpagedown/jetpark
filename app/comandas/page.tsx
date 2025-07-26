@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { PageHeader } from "@/components/page-header"
 import { Search, Clock, DollarSign, CreditCard, Receipt } from "lucide-react"
 
 interface Comanda {
@@ -73,16 +74,15 @@ export default function ComandasPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Gerenciamento de Comandas</h1>
-            <Button>
-              Nova Comanda
-            </Button>
-          </div>
+      <PageHeader title="Gerenciamento de Comandas" />
+
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-end mb-6">
+          <Button>
+            Nova Comanda
+          </Button>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8">
         {/* Resumo */}

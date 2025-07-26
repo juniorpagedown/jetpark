@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { QrCode, Users, Clock, DollarSign } from "lucide-react"
 
 interface Mesa {
@@ -100,26 +101,20 @@ export default function MesasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Controle de Mesas</h1>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline">
-                Adicionar Mesa
-              </Button>
-              <Button>
-                Nova Comanda
-              </Button>
-            </div>
-          </div>
+    <DashboardLayout title="Controle de Mesas">
+      {/* Botões de Ação */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" className="text-sm">
+            Adicionar Mesa
+          </Button>
+          <Button className="text-sm">
+            Nova Comanda
+          </Button>
         </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8">
-        {/* Resumo */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      </div>
+      {/* Resumo - Responsivo */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total de Mesas</CardTitle>
@@ -171,7 +166,7 @@ export default function MesasPage() {
         </div>
 
         {/* Grid de Mesas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {mesas.map((mesa) => (
             <Card key={mesa.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-3">
@@ -248,7 +243,6 @@ export default function MesasPage() {
             </Card>
           ))}
         </div>
-      </main>
-    </div>
+    </DashboardLayout>
   )
 }

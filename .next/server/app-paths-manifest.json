@@ -1,4 +1,8 @@
 {
-  "/api/env-check/route": "app/api/env-check/route.js",
-  "/login/page": "app/login/page.js"
+  "/not-found": "app/not-found.js",
+  "/login/page": "app/login/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/mesas/page": "app/mesas/page.js",
+  "/entradas/page": "app/entradas/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
 }

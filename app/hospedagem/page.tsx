@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { PageHeader } from "@/components/page-header"
 import { Bed, Users, Calendar, DollarSign } from "lucide-react"
 
 interface Quarto {
@@ -123,21 +124,18 @@ export default function HospedagemPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Gerenciamento de Quartos</h1>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline">
-                Adicionar Quarto
-              </Button>
-              <Button>
-                Nova Reserva
-              </Button>
-            </div>
-          </div>
+      <PageHeader title="Gerenciamento de Quartos" />
+
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-end space-x-4 mb-6">
+          <Button variant="outline">
+            Adicionar Quarto
+          </Button>
+          <Button>
+            Nova Reserva
+          </Button>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8">
         {/* Resumo */}
