@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { PageHeader } from "@/components/page-header"
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { Bed, Users, Calendar, DollarSign } from "lucide-react"
 
 interface Quarto {
@@ -123,24 +123,20 @@ export default function HospedagemPage() {
   const taxaOcupacao = ((quartosOcupados.length + quartosReservados.length) / quartos.length) * 100
 
   return (
-    <div className="min-h-screen bg-background">
-      <PageHeader title="Gerenciamento de Quartos" />
-
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-end space-x-4 mb-6">
-          <Button variant="outline">
+    <DashboardLayout title="Gerenciamento de Quartos">
+      <div className="space-y-6">
+        {/* Botões de ação */}
+        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-4">
+          <Button variant="outline" className="w-full sm:w-auto">
             Adicionar Quarto
           </Button>
-          <Button>
+          <Button className="w-full sm:w-auto">
             Nova Reserva
           </Button>
         </div>
-      </div>
-
-      <main className="container mx-auto px-4 py-8">
-        {/* Resumo */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+        {/* Resumo - Grid Responsivo */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Taxa de Ocupação</CardTitle>
               <Bed className="h-4 w-4 text-muted-foreground" />
@@ -153,7 +149,7 @@ export default function HospedagemPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Quartos Livres</CardTitle>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -163,7 +159,7 @@ export default function HospedagemPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Check-outs Hoje</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -187,7 +183,7 @@ export default function HospedagemPage() {
         </div>
 
         {/* Grid de Quartos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
           {quartos.map((quarto) => (
             <Card key={quarto.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-3">
@@ -195,7 +191,7 @@ export default function HospedagemPage() {
                   <CardTitle className="text-lg">Quarto {quarto.numero}</CardTitle>
                   <Badge 
                     variant="secondary" 
-                    className={`${getStatusColor(quarto.status)} text-white`}
+                    className={`${getStatusColor(quarto.status)} text-white w-fit`}
                   >
                     {getStatusText(quarto.status)}
                   </Badge>
@@ -242,13 +238,13 @@ export default function HospedagemPage() {
                   </div>
                 </div>
 
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   {quarto.status === 'LIVRE' && (
                     <>
                       <Button size="sm" className="flex-1">
                         Reservar
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" className="flex-1">
                         Check-in
                       </Button>
                     </>
@@ -259,7 +255,7 @@ export default function HospedagemPage() {
                       <Button size="sm" variant="outline" className="flex-1">
                         Ver Estadia
                       </Button>
-                      <Button size="sm" variant="destructive">
+                      <Button size="sm" variant="destructive" className="flex-1">
                         Check-out
                       </Button>
                     </>
@@ -270,14 +266,14 @@ export default function HospedagemPage() {
                       <Button size="sm" variant="outline" className="flex-1">
                         Ver Reserva
                       </Button>
-                      <Button size="sm">
+                      <Button size="sm" className="flex-1">
                         Check-in
                       </Button>
                     </>
                   )}
 
                   {quarto.status === 'MANUTENCAO' && (
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button size="sm" variant="outline" className="w-full">
                       Finalizar Manutenção
                     </Button>
                   )}
@@ -286,7 +282,7 @@ export default function HospedagemPage() {
             </Card>
           ))}
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   )
 }

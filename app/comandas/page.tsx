@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { PageHeader } from "@/components/page-header"
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { Search, Clock, DollarSign, CreditCard, Receipt } from "lucide-react"
 
 interface Comanda {
@@ -73,21 +73,18 @@ export default function ComandasPage() {
   const totalFaturamento = comandasAbertas.reduce((acc, c) => acc + c.total, 0)
 
   return (
-    <div className="min-h-screen bg-background">
-      <PageHeader title="Gerenciamento de Comandas" />
-
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-end mb-6">
-          <Button>
+    <DashboardLayout title="Gerenciamento de Comandas">
+      <div className="space-y-6">
+        {/* Botão de Nova Comanda */}
+        <div className="flex justify-end">
+          <Button className="w-full sm:w-auto">
             Nova Comanda
           </Button>
         </div>
-      </div>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Resumo */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+        {/* Resumo - Grid Responsivo */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Comandas Abertas</CardTitle>
               <Receipt className="h-4 w-4 text-muted-foreground" />
@@ -97,7 +94,7 @@ export default function ComandasPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Faturamento Ativo</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -107,7 +104,7 @@ export default function ComandasPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Ticket Médio</CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
@@ -119,7 +116,7 @@ export default function ComandasPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
@@ -131,14 +128,14 @@ export default function ComandasPage() {
         </div>
 
         {/* Busca */}
-        <div className="mb-6">
+        <div className="w-full">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Buscar por comanda, mesa ou cliente..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 w-full"
             />
           </div>
         </div>
@@ -147,10 +144,10 @@ export default function ComandasPage() {
         <div className="space-y-4">
           {filteredComandas.map((comanda) => (
             <Card key={comanda.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div>
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div className="flex-1">
                       <h3 className="font-semibold text-lg">{comanda.id}</h3>
                       <p className="text-sm text-muted-foreground">
                         Mesa {comanda.mesa} {comanda.cliente && `• ${comanda.cliente}`}
@@ -158,43 +155,46 @@ export default function ComandasPage() {
                     </div>
                     <Badge 
                       variant={comanda.status === 'ABERTA' ? 'default' : 'secondary'}
+                      className="w-fit"
                     >
                       {comanda.status}
                     </Badge>
                   </div>
 
-                  <div className="flex items-center space-x-6">
-                    <div className="text-right">
-                      <p className="text-sm text-muted-foreground">Total</p>
-                      <p className="font-semibold text-lg">R$ {comanda.total.toFixed(2)}</p>
-                    </div>
-                    
-                    <div className="text-right">
-                      <p className="text-sm text-muted-foreground">Itens</p>
-                      <p className="font-semibold">{comanda.itens}</p>
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <div className="grid grid-cols-3 sm:flex sm:gap-6 text-center sm:text-right">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Total</p>
+                        <p className="font-semibold text-lg">R$ {comanda.total.toFixed(2)}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm text-muted-foreground">Itens</p>
+                        <p className="font-semibold">{comanda.itens}</p>
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-muted-foreground">Aberta às</p>
+                        <p className="font-semibold">{comanda.tempoAbertura}</p>
+                      </div>
                     </div>
 
-                    <div className="text-right">
-                      <p className="text-sm text-muted-foreground">Aberta às</p>
-                      <p className="font-semibold">{comanda.tempoAbertura}</p>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
                         Ver Detalhes
                       </Button>
                       {comanda.status === 'ABERTA' && (
                         <>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="w-full sm:w-auto">
                             Adicionar Item
                           </Button>
-                          <Button size="sm">
+                          <Button size="sm" className="w-full sm:w-auto">
                             Fechar Comanda
                           </Button>
                         </>
                       )}
                       {comanda.status === 'FECHADA' && (
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
                           Reimprimir
                         </Button>
                       )}
@@ -219,7 +219,7 @@ export default function ComandasPage() {
             <p className="text-muted-foreground">Nenhuma comanda encontrada</p>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   )
 }

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { PageHeader } from "@/components/page-header"
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { Clock, ChefHat, CheckCircle, AlertCircle } from "lucide-react"
 
 interface ItemPedido {
@@ -112,11 +112,10 @@ export default function CozinhaPage() {
   const pedidosProntos = pedidos.filter(p => p.status === 'PRONTO')
 
   return (
-    <div className="min-h-screen bg-background">
-      <PageHeader title="Cozinha - KDS" />
-
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-center space-x-6 mb-6">
+    <DashboardLayout title="Cozinha - KDS">
+      <div className="space-y-6">
+        {/* Status dos pedidos */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
           <Badge variant="outline" className="text-red-600 text-sm px-4 py-2">
             {pedidosPendentes.length} Pendentes
           </Badge>
@@ -127,10 +126,8 @@ export default function CozinhaPage() {
             {pedidosProntos.length} Prontos
           </Badge>
         </div>
-      </div>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Coluna Pendentes */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
@@ -289,7 +286,7 @@ export default function CozinhaPage() {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   )
 }
