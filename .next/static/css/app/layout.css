@@ -547,10 +547,9 @@ video {
     margin-top: 0 !important;
   }
   
-  /* Reduzir espaçamento superior no dashboard */
-  .dashboard-content > *:first-child {
+  /* Garantir que não há espaçamento extra no grid */
+  .grid:first-child {
     margin-top: 0 !important;
-    padding-top: 0 !important;
   }
 .pointer-events-auto {
   pointer-events: auto;
@@ -603,6 +602,9 @@ video {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+.mb-1 {
+  margin-bottom: 0.25rem;
 }
 .mb-2 {
   margin-bottom: 0.5rem;
@@ -1099,10 +1101,6 @@ video {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
-.py-1\.5 {
-  padding-top: 0.375rem;
-  padding-bottom: 0.375rem;
-}
 .py-12 {
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -1129,14 +1127,8 @@ video {
 .pt-0 {
   padding-top: 0px;
 }
-.pt-2 {
-  padding-top: 0.5rem;
-}
 .pt-4 {
   padding-top: 1rem;
-}
-.pt-1 {
-  padding-top: 0.25rem;
 }
 .text-center {
   text-align: center;
@@ -1942,21 +1934,17 @@ video {
     padding-right: 1.5rem;
   }
 
-  .sm\:py-2 {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  .sm\:py-1\.5 {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
   }
 
   .sm\:pb-6 {
     padding-bottom: 1.5rem;
   }
 
-  .sm\:pt-3 {
-    padding-top: 0.75rem;
-  }
-
-  .sm\:pt-2 {
-    padding-top: 0.5rem;
+  .sm\:pt-4 {
+    padding-top: 1rem;
   }
 
   .sm\:text-right {
@@ -2070,21 +2058,17 @@ video {
     padding-right: 2rem;
   }
 
-  .lg\:py-2\.5 {
-    padding-top: 0.625rem;
-    padding-bottom: 0.625rem;
+  .lg\:py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .lg\:pb-8 {
     padding-bottom: 2rem;
   }
 
-  .lg\:pt-4 {
-    padding-top: 1rem;
-  }
-
-  .lg\:pt-3 {
-    padding-top: 0.75rem;
+  .lg\:pt-6 {
+    padding-top: 1.5rem;
   }
 
   .lg\:text-right {

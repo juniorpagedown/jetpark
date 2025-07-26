@@ -72,10 +72,9 @@
     margin-top: 0 !important;
   }
   
-  /* Reduzir espaçamento superior no dashboard */
-  .dashboard-content > *:first-child {
+  /* Garantir que não há espaçamento extra no grid */
+  .grid:first-child {
     margin-top: 0 !important;
-    padding-top: 0 !important;
   }
 }
 

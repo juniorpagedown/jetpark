@@ -16,7 +16,7 @@ export function PageHeader({ title, showHomeButton = true, onMenuClick }: PageHe
 
   return (
     <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-30 shadow-sm">
-      <div className="px-4 py-1.5 sm:py-2 lg:py-2.5">
+      <div className="px-4 py-1 sm:py-1.5 lg:py-2">
         <div className="flex items-center justify-between max-w-full">
           <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
             {/* Menu Hamburguer - apenas mobile */}
