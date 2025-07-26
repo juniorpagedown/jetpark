@@ -4,8 +4,8 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { DashboardLayout } from "@/components/dashboard-layout"
 import { Clock, ChefHat, CheckCircle, AlertCircle } from "lucide-react"
+import { DashboardLayout } from "@/components/dashboard-layout"
 
 interface ItemPedido {
   id: string
@@ -111,179 +111,186 @@ export default function CozinhaPage() {
   const pedidosPreparando = pedidos.filter(p => p.status === 'PREPARANDO')
   const pedidosProntos = pedidos.filter(p => p.status === 'PRONTO')
 
+  const actions = (
+    <div className="flex items-center space-x-4">
+      <Badge variant="outline" className="text-red-600">
+        {pedidosPendentes.length} Pendentes
+      </Badge>
+      <Badge variant="outline" className="text-yellow-600">
+        {pedidosPreparando.length} Preparando
+      </Badge>
+      <Badge variant="outline" className="text-green-600">
+        {pedidosProntos.length} Prontos
+      </Badge>
+    </div>
+  )
+
   return (
-    <DashboardLayout title="Cozinha - KDS">
-      <div className="space-y-6">
-        {/* Status dos pedidos */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-          <Badge variant="outline" className="text-red-600 text-sm px-4 py-2">
-            {pedidosPendentes.length} Pendentes
-          </Badge>
-          <Badge variant="outline" className="text-yellow-600 text-sm px-4 py-2">
-            {pedidosPreparando.length} Preparando
-          </Badge>
-          <Badge variant="outline" className="text-green-600 text-sm px-4 py-2">
-            {pedidosProntos.length} Prontos
-          </Badge>
+    <DashboardLayout 
+      title={
+        <div className="flex items-center space-x-2">
+          <ChefHat className="h-6 w-6" />
+          <span>Cozinha - KDS</span>
+        </div>
+      } 
+      actions={actions}
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Coluna Pendentes */}
+        <div>
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <h2 className="text-lg font-semibold">Pendentes ({pedidosPendentes.length})</h2>
+          </div>
+          <div className="space-y-4">
+            {pedidosPendentes.map((pedido) => (
+              <Card 
+                key={pedido.id} 
+                className={`${getPriorityColor(pedido.prioridade)} border-l-4`}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base">{pedido.produto}</CardTitle>
+                    <Badge variant="secondary">
+                      Mesa {pedido.mesa}
+                    </Badge>
+                  </div>
+                  <CardDescription className="flex items-center space-x-4">
+                    <span>Qtd: {pedido.quantidade}</span>
+                    <span className="flex items-center space-x-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{pedido.tempo}</span>
+                    </span>
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="space-y-3">
+                  {pedido.observacao && (
+                    <div className="bg-yellow-50 p-2 rounded text-sm">
+                      <strong>Obs:</strong> {pedido.observacao}
+                    </div>
+                  )}
+                  
+                  <div className="text-xs text-gray-600">
+                    Comanda: {pedido.comanda}
+                  </div>
+                  
+                  <Button 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => updateStatus(pedido.id, 'PREPARANDO')}
+                  >
+                    Iniciar Preparo
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Coluna Pendentes */}
-          <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <h2 className="text-lg font-semibold">Pendentes ({pedidosPendentes.length})</h2>
-            </div>
-            <div className="space-y-4">
-              {pedidosPendentes.map((pedido) => (
-                <Card 
-                  key={pedido.id} 
-                  className={`${getPriorityColor(pedido.prioridade)} border-l-4`}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-base">{pedido.produto}</CardTitle>
-                      <Badge variant="secondary">
-                        Mesa {pedido.mesa}
-                      </Badge>
-                    </div>
-                    <CardDescription className="flex items-center space-x-4">
-                      <span>Qtd: {pedido.quantidade}</span>
-                      <span className="flex items-center space-x-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{pedido.tempo}</span>
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-3">
-                    {pedido.observacao && (
-                      <div className="bg-yellow-50 p-2 rounded text-sm">
-                        <strong>Obs:</strong> {pedido.observacao}
-                      </div>
-                    )}
-                    
-                    <div className="text-xs text-muted-foreground">
-                      Comanda: {pedido.comanda}
-                    </div>
-                    
-                    <Button 
-                      size="sm" 
-                      className="w-full"
-                      onClick={() => updateStatus(pedido.id, 'PREPARANDO')}
-                    >
-                      Iniciar Preparo
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+        {/* Coluna Preparando */}
+        <div>
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <h2 className="text-lg font-semibold">Preparando ({pedidosPreparando.length})</h2>
           </div>
-
-          {/* Coluna Preparando */}
-          <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <h2 className="text-lg font-semibold">Preparando ({pedidosPreparando.length})</h2>
-            </div>
-            <div className="space-y-4">
-              {pedidosPreparando.map((pedido) => (
-                <Card 
-                  key={pedido.id} 
-                  className={`${getPriorityColor(pedido.prioridade)} border-l-4`}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-base">{pedido.produto}</CardTitle>
-                      <Badge variant="secondary">
-                        Mesa {pedido.mesa}
-                      </Badge>
+          <div className="space-y-4">
+            {pedidosPreparando.map((pedido) => (
+              <Card 
+                key={pedido.id} 
+                className={`${getPriorityColor(pedido.prioridade)} border-l-4`}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base">{pedido.produto}</CardTitle>
+                    <Badge variant="secondary">
+                      Mesa {pedido.mesa}
+                    </Badge>
+                  </div>
+                  <CardDescription className="flex items-center space-x-4">
+                    <span>Qtd: {pedido.quantidade}</span>
+                    <span className="flex items-center space-x-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{pedido.tempo}</span>
+                    </span>
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="space-y-3">
+                  {pedido.observacao && (
+                    <div className="bg-yellow-50 p-2 rounded text-sm">
+                      <strong>Obs:</strong> {pedido.observacao}
                     </div>
-                    <CardDescription className="flex items-center space-x-4">
-                      <span>Qtd: {pedido.quantidade}</span>
-                      <span className="flex items-center space-x-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{pedido.tempo}</span>
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
+                  )}
                   
-                  <CardContent className="space-y-3">
-                    {pedido.observacao && (
-                      <div className="bg-yellow-50 p-2 rounded text-sm">
-                        <strong>Obs:</strong> {pedido.observacao}
-                      </div>
-                    )}
-                    
-                    <div className="text-xs text-muted-foreground">
-                      Comanda: {pedido.comanda}
-                    </div>
-                    
-                    <Button 
-                      size="sm" 
-                      className="w-full bg-green-600 hover:bg-green-700"
-                      onClick={() => updateStatus(pedido.id, 'PRONTO')}
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Marcar como Pronto
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  <div className="text-xs text-gray-600">
+                    Comanda: {pedido.comanda}
+                  </div>
+                  
+                  <Button 
+                    size="sm" 
+                    className="w-full bg-green-600 hover:bg-green-700"
+                    onClick={() => updateStatus(pedido.id, 'PRONTO')}
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Marcar como Pronto
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        </div>
 
-          {/* Coluna Prontos */}
-          <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <h2 className="text-lg font-semibold">Prontos ({pedidosProntos.length})</h2>
-            </div>
-            <div className="space-y-4">
-              {pedidosProntos.map((pedido) => (
-                <Card 
-                  key={pedido.id} 
-                  className="border-l-4 border-green-500 bg-green-50"
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-base">{pedido.produto}</CardTitle>
-                      <Badge variant="secondary">
-                        Mesa {pedido.mesa}
-                      </Badge>
+        {/* Coluna Prontos */}
+        <div>
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <h2 className="text-lg font-semibold">Prontos ({pedidosProntos.length})</h2>
+          </div>
+          <div className="space-y-4">
+            {pedidosProntos.map((pedido) => (
+              <Card 
+                key={pedido.id} 
+                className="border-l-4 border-green-500 bg-green-50"
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base">{pedido.produto}</CardTitle>
+                    <Badge variant="secondary">
+                      Mesa {pedido.mesa}
+                    </Badge>
+                  </div>
+                  <CardDescription className="flex items-center space-x-4">
+                    <span>Qtd: {pedido.quantidade}</span>
+                    <span className="flex items-center space-x-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{pedido.tempo}</span>
+                    </span>
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="space-y-3">
+                  {pedido.observacao && (
+                    <div className="bg-yellow-50 p-2 rounded text-sm">
+                      <strong>Obs:</strong> {pedido.observacao}
                     </div>
-                    <CardDescription className="flex items-center space-x-4">
-                      <span>Qtd: {pedido.quantidade}</span>
-                      <span className="flex items-center space-x-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{pedido.tempo}</span>
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
+                  )}
                   
-                  <CardContent className="space-y-3">
-                    {pedido.observacao && (
-                      <div className="bg-yellow-50 p-2 rounded text-sm">
-                        <strong>Obs:</strong> {pedido.observacao}
-                      </div>
-                    )}
-                    
-                    <div className="text-xs text-muted-foreground">
-                      Comanda: {pedido.comanda}
-                    </div>
-                    
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => updateStatus(pedido.id, 'ENTREGUE')}
-                    >
-                      Marcar como Entregue
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  <div className="text-xs text-gray-600">
+                    Comanda: {pedido.comanda}
+                  </div>
+                  
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => updateStatus(pedido.id, 'ENTREGUE')}
+                  >
+                    Marcar como Entregue
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </div>

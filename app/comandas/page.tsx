@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { DashboardLayout } from "@/components/dashboard-layout"
 import { Search, Clock, DollarSign, CreditCard, Receipt } from "lucide-react"
+import { DashboardLayout } from "@/components/dashboard-layout"
 
 interface Comanda {
   id: string
@@ -72,42 +72,41 @@ export default function ComandasPage() {
   const comandasAbertas = comandas.filter(c => c.status === 'ABERTA')
   const totalFaturamento = comandasAbertas.reduce((acc, c) => acc + c.total, 0)
 
-  return (
-    <DashboardLayout title="Gerenciamento de Comandas">
-      <div className="space-y-6">
-        {/* Botão de Nova Comanda */}
-        <div className="flex justify-end">
-          <Button className="w-full sm:w-auto">
-            Nova Comanda
-          </Button>
-        </div>
+  const actions = (
+    <Button>
+      Nova Comanda
+    </Button>
+  )
 
-        {/* Resumo - Grid Responsivo */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          <Card className="hover:shadow-md transition-shadow">
+  return (
+    <DashboardLayout title="Gerenciamento de Comandas" actions={actions}>
+      <div className="space-y-8">
+        {/* Resumo */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Comandas Abertas</CardTitle>
-              <Receipt className="h-4 w-4 text-muted-foreground" />
+              <Receipt className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{comandasAbertas.length}</div>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Faturamento Ativo</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <DollarSign className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">R$ {totalFaturamento.toFixed(2)}</div>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Ticket Médio</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <CreditCard className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -116,10 +115,10 @@ export default function ComandasPage() {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">1h 25m</div>
@@ -128,73 +127,68 @@ export default function ComandasPage() {
         </div>
 
         {/* Busca */}
-        <div className="w-full">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Buscar por comanda, mesa ou cliente..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full"
-            />
-          </div>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+          <Input
+            placeholder="Buscar por comanda, mesa ou cliente..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
         </div>
 
         {/* Lista de Comandas */}
         <div className="space-y-4">
           {filteredComandas.map((comanda) => (
             <Card key={comanda.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-                  <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg truncate">{comanda.id}</h3>
-                      <p className="text-sm text-muted-foreground truncate">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div>
+                      <h3 className="font-semibold text-lg">{comanda.id}</h3>
+                      <p className="text-sm text-gray-600">
                         Mesa {comanda.mesa} {comanda.cliente && `• ${comanda.cliente}`}
                       </p>
                     </div>
                     <Badge 
                       variant={comanda.status === 'ABERTA' ? 'default' : 'secondary'}
-                      className="w-fit shrink-0"
                     >
                       {comanda.status}
                     </Badge>
                   </div>
 
-                  <div className="flex flex-col xl:flex-row gap-4 xl:gap-6">
-                    <div className="grid grid-cols-3 gap-4 text-center xl:flex xl:gap-6 xl:text-right">
-                      <div className="min-w-0">
-                        <p className="text-sm text-muted-foreground">Total</p>
-                        <p className="font-semibold text-lg truncate">R$ {comanda.total.toFixed(2)}</p>
-                      </div>
-                      
-                      <div className="min-w-0">
-                        <p className="text-sm text-muted-foreground">Itens</p>
-                        <p className="font-semibold">{comanda.itens}</p>
-                      </div>
-
-                      <div className="min-w-0">
-                        <p className="text-sm text-muted-foreground">Aberta às</p>
-                        <p className="font-semibold">{comanda.tempoAbertura}</p>
-                      </div>
+                  <div className="flex items-center space-x-6">
+                    <div className="text-right">
+                      <p className="text-sm text-gray-600">Total</p>
+                      <p className="font-semibold text-lg">R$ {comanda.total.toFixed(2)}</p>
+                    </div>
+                    
+                    <div className="text-right">
+                      <p className="text-sm text-gray-600">Itens</p>
+                      <p className="font-semibold">{comanda.itens}</p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-                      <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                    <div className="text-right">
+                      <p className="text-sm text-gray-600">Aberta às</p>
+                      <p className="font-semibold">{comanda.tempoAbertura}</p>
+                    </div>
+
+                    <div className="flex space-x-2">
+                      <Button variant="outline" size="sm">
                         Ver Detalhes
                       </Button>
                       {comanda.status === 'ABERTA' && (
                         <>
-                          <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                          <Button variant="outline" size="sm">
                             Adicionar Item
                           </Button>
-                          <Button size="sm" className="w-full sm:w-auto">
+                          <Button size="sm">
                             Fechar Comanda
                           </Button>
                         </>
                       )}
                       {comanda.status === 'FECHADA' && (
-                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                        <Button variant="outline" size="sm">
                           Reimprimir
                         </Button>
                       )}
@@ -204,7 +198,7 @@ export default function ComandasPage() {
 
                 {comanda.tempoPedido && (
                   <div className="mt-4 pt-4 border-t">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-600">
                       Último pedido às {comanda.tempoPedido}
                     </p>
                   </div>
@@ -216,7 +210,7 @@ export default function ComandasPage() {
 
         {filteredComandas.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Nenhuma comanda encontrada</p>
+            <p className="text-gray-600">Nenhuma comanda encontrada</p>
           </div>
         )}
       </div>
