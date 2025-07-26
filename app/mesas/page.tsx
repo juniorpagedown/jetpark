@@ -34,7 +34,7 @@ export default function MesasPage() {
       status: 'OCUPADA',
       comanda: {
         id: 'cmd-001',
-        total: 85.50,
+        total: 125.50,
         tempoAbertura: '14:30'
       }
     },
@@ -48,31 +48,32 @@ export default function MesasPage() {
       id: '4',
       numero: 4,
       lugares: 4,
-      status: 'OCUPADA',
-      comanda: {
-        id: 'cmd-002',
-        total: 125.00,
-        tempoAbertura: '13:45'
-      }
+      status: 'LIVRE'
     },
     {
       id: '5',
       numero: 5,
-      lugares: 2,
-      status: 'LIVRE'
+      lugares: 8,
+      status: 'OCUPADA',
+      comanda: {
+        id: 'cmd-002',
+        total: 89.25,
+        tempoAbertura: '13:45'
+      }
     },
     {
       id: '6',
       numero: 6,
-      lugares: 8,
-      status: 'OCUPADA',
-      comanda: {
-        id: 'cmd-003',
-        total: 245.75,
-        tempoAbertura: '12:15'
-      }
+      lugares: 2,
+      status: 'LIVRE'
     }
   ])
+
+  const mesasLivres = mesas.filter(m => m.status === 'LIVRE').length
+  const mesasOcupadas = mesas.filter(m => m.status === 'OCUPADA').length
+  const receitaTotal = mesas
+    .filter(m => m.comanda)
+    .reduce((acc, m) => acc + (m.comanda?.total || 0), 0)
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -113,12 +114,12 @@ export default function MesasPage() {
           </Button>
         </div>
 
-        {/* Resumo - Responsivo */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        {/* Resumo - Grid Responsivo */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total de Mesas</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <QrCode className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{mesas.length}</div>
@@ -131,9 +132,7 @@ export default function MesasPage() {
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {mesas.filter(m => m.status === 'LIVRE').length}
-              </div>
+              <div className="text-2xl font-bold">{mesasLivres}</div>
             </CardContent>
           </Card>
 
@@ -143,99 +142,91 @@ export default function MesasPage() {
               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {mesas.filter(m => m.status === 'OCUPADA').length}
-              </div>
+              <div className="text-2xl font-bold">{mesasOcupadas}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Faturamento Ativo</CardTitle>
+              <CardTitle className="text-sm font-medium">Receita Ativa</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                R$ {mesas
-                  .filter(m => m.comanda)
-                  .reduce((acc, m) => acc + (m.comanda?.total || 0), 0)
-                  .toFixed(2)}
-              </div>
+              <div className="text-2xl font-bold">R$ {receitaTotal.toFixed(2)}</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Grid de Mesas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
           {mesas.map((mesa) => (
-            <Card key={mesa.id} className="hover:shadow-lg transition-shadow">
+            <Card 
+              key={mesa.id} 
+              className={`hover:shadow-lg transition-all duration-200 cursor-pointer border-2 ${
+                mesa.status === 'LIVRE' ? 'hover:border-green-200' :
+                mesa.status === 'OCUPADA' ? 'hover:border-red-200' :
+                'hover:border-yellow-200'
+              }`}
+            >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Mesa {mesa.numero}</CardTitle>
-                  <Badge 
-                    variant="secondary" 
-                    className={getStatusBadge(mesa.status)}
-                  >
+                  <CardTitle className="text-lg font-bold">
+                    Mesa {mesa.numero}
+                  </CardTitle>
+                  <Badge className={`px-2 py-1 text-xs font-medium ${getStatusBadge(mesa.status)}`}>
                     {getStatusText(mesa.status)}
                   </Badge>
                 </div>
-                <CardDescription className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <Users className="h-4 w-4 mr-1" />
                   <span>{mesa.lugares} lugares</span>
-                </CardDescription>
+                </div>
               </CardHeader>
               
-              <CardContent className="space-y-4">
+              <CardContent className="pt-0 space-y-3">
                 {mesa.comanda && (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Comanda:</span>
-                      <span className="font-medium">{mesa.comanda.id}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Total:</span>
-                      <span className="font-medium">R$ {mesa.comanda.total.toFixed(2)}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground flex items-center space-x-1">
-                        <Clock className="h-3 w-3" />
-                        <span>Aberta às:</span>
+                  <div className="bg-slate-50 p-3 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-slate-700">
+                        Comanda: {mesa.comanda.id}
                       </span>
-                      <span className="font-medium">{mesa.comanda.tempoAbertura}</span>
+                      <span className="text-sm text-slate-600 flex items-center">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {mesa.comanda.tempoAbertura}
+                      </span>
+                    </div>
+                    <div className="text-lg font-bold text-green-600">
+                      R$ {mesa.comanda.total.toFixed(2)}
                     </div>
                   </div>
                 )}
-
-                <div className="flex space-x-2">
+                
+                <div className="flex flex-col gap-2">
                   {mesa.status === 'LIVRE' && (
-                    <Button size="sm" className="flex-1">
-                      Abrir Comanda
+                    <Button size="sm" className="w-full">
+                      Ocupar Mesa
                     </Button>
                   )}
                   
                   {mesa.status === 'OCUPADA' && (
                     <>
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button size="sm" className="w-full">
                         Ver Comanda
                       </Button>
-                      <Button size="sm" variant="destructive">
-                        Fechar
+                      <Button variant="outline" size="sm" className="w-full">
+                        Fechar Mesa
                       </Button>
                     </>
                   )}
                   
                   {mesa.status === 'RESERVADA' && (
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full">
                       Ver Reserva
                     </Button>
                   )}
                 </div>
 
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
-                  className="w-full flex items-center space-x-2"
-                >
+                <Button variant="ghost" size="sm" className="w-full flex items-center gap-2">
                   <QrCode className="h-4 w-4" />
                   <span>QR Code</span>
                 </Button>

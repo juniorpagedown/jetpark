@@ -52,9 +52,30 @@
 @layer base {
   * {
     @apply border-border;
+    margin: 0;
+    padding: 0;
   }
-  body {
+  
+  html, body {
     @apply bg-background text-foreground;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    line-height: 1.5;
+  }
+  
+  /* Remover margens dos primeiros elementos */
+  main > div > *:first-child {
+    margin-top: 0 !important;
+  }
+  
+  /* Reduzir espaçamento superior no dashboard */
+  .dashboard-content > *:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 }
 

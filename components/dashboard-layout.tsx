@@ -35,8 +35,8 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         />
         
         {/* Conteúdo */}
-        <main className="p-4 sm:p-6 lg:p-8 max-w-full">
-          <div className="mx-auto max-w-7xl">
+        <main className="px-4 pt-1 pb-4 sm:px-6 sm:pt-2 sm:pb-6 lg:px-8 lg:pt-3 lg:pb-8 max-w-full">
+          <div className="mx-auto max-w-7xl dashboard-content">
             {children}
           </div>
         </main>

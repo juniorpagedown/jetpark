@@ -1,7 +1,7 @@
 {
-  "/login/page": "app/login/page.js",
+  "/not-found": "app/not-found.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/mesas/page": "app/mesas/page.js",
-  "/entradas/page": "app/entradas/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/login/page": "app/login/page.js",
+  "/mesas/page": "app/mesas/page.js"
 }
